@@ -8,6 +8,7 @@
 #include "NetComm.h"
 #include <strings.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include "crc-16.h"
@@ -22,6 +23,7 @@ NetComm::NetComm() {
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	addr.sin_port = htons(NETCOMM_RECVPORT);
 	bind(recvSock, (sockaddr*) &addr, sizeof(addr));
+	fcntl(recvSock, F_SETFL, O_NONBLOCK);
 }
 
 NetComm::~NetComm() {
