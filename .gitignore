@@ -26,3 +26,13 @@
 *.exe
 *.out
 *.app
+
+# Arduino
+*.ino.cpp
+spec.d
+
+# Eclipse
+.cproject
+.project
+.settings/
+Release/
