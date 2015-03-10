@@ -27,6 +27,10 @@ void setup() {
 
 void loop() {
     updateState();
-    printData(control);
+    if(control.isTeleop) {
+        printData(control);
+    } else {
+        Serial.println("Autonomous");
+    }
     delay(LOOP_DELAY);
 }
