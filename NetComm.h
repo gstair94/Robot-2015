@@ -14,22 +14,22 @@ const int NETCOMM_RECVPORT = 6800;
 
 // Little-endian on Galileo (x86)
 struct __attribute__((__packed__)) ControlData {
-	unsigned int forward :1;
-	unsigned int reverse :1;
-	unsigned int left :1;
-	unsigned int right :1;
-	unsigned short crc16;
+    unsigned int forward :1;
+    unsigned int reverse :1;
+    unsigned int left :1;
+    unsigned int right :1;
+    unsigned short crc16;
 };
 
 class NetComm {
 public:
-	NetComm();
-	~NetComm();
+    NetComm();
+    ~NetComm();
 
-	bool getData(ControlData* data);
+    bool getData(ControlData* data);
 
 private:
-	int recvSock;
+    int recvSock;
 };
 
 #endif /* ROBOT_2015_NETCOMM_H_ */
