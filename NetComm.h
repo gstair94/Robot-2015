@@ -14,6 +14,7 @@ const int NETCOMM_RECVPORT = 6800;
 
 // Little-endian on Galileo (x86)
 struct __attribute__((__packed__)) ControlData {
+    unsigned int isTeleop :1;
     unsigned int forward :1;
     unsigned int reverse :1;
     unsigned int left :1;
