@@ -23,6 +23,9 @@ void printData(ControlData& data) {
 
 void setup() {
     Serial.begin(9600);
+    // Initialize default values for control
+    bzero(&control, sizeof(control));
+    control.isTeleop = false;
 }
 
 void loop() {
