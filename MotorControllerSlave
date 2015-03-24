@@ -1,0 +1,54 @@
+#include <Wire.h> //import wire library
+#include <Servo.h> //import servo library
+
+int SpeedA; //initialize motorA's speed variable
+int SpeedB; //initialize motorB's speed variable
+int SpeedC; //initialize motorC's speed variable
+int SpeedD; //initialize motorD's speed variable
+int trigger = 0; //initialize event trigger with state 0
+
+Servo MotorA; //set MotorA as servo object
+Servo MotorB; //set MotorB as servo object
+Servo MotorC; //set MotorC as servo object
+Servo MotorD; //set MotorD as servo object
+
+void setup() //initial setup
+{
+  Serial.begin(9600);           // Begin Serial at 9600 BAUD
+  Wire.begin(1);                // Start I2C Bus as a Slave (Device Number 1)
+  Wire.onReceive(receiveEvent); // register event
+  MotorA.attach(6);             // Attach Servo object MotorA to PWM pin 6
+  MotorB.attach(9);             // Attach Servo object MotorB to PWM pin 9
+  MotorC.attach(10);            // Attach Servo object MotorC to PWM pin 10
+  MotorD.attach(11);            // Attach Servo object MotorD to PWM pin 11
+  
+}
+
+void loop() //Main Loop
+{
+  if (trigger == 1)           // If recieved data over i2c
+  {
+    MotorA.write(SpeedA);     // Set MotorA speed
+    Serial.println(SpeedA);   // print MotorA's speed
+    MotorB.write(SpeedB);     // Set MotorB speed
+    Serial.println(SpeedB);   // print MotorB's speed
+    MotorC.write(SpeedC);     // Set MotorC speed
+    Serial.println(SpeedC);   // print MotorC's speed
+    MotorD.write(SpeedD);     // Set MotorD speed
+    Serial.println(SpeedD);   // print MotorD's speed
+    trigger = 0;              // reset event trigger state
+  }
+  else                        // if didn't recieve data
+  {   
+                              // do nothing
+  }
+}
+
+void receiveEvent(int howMany)  // when data is coming in
+{
+trigger = 1;                    // trigger that an event happened
+SpeedA = Wire.read();           // set the first byte as MotorA's speed
+SpeedB = Wire.read();           // set the second byte as MotorB's speed
+SpeedC = Wire.read();           // set the third byte as MotorC's speed
+SpeedD = Wire.read();           // set the fourth byte as MotorD's speed
+}
