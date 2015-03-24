@@ -1,0 +1,123 @@
+//Autonomous Master Arduino
+//Garrett Stair
+
+//This program uses subroutines to transmit motor # and speed to the motor driver slave
+
+#include <Wire.h> //import wire library
+
+// initialize the forward backward and stop values that the Sabertooth driver will use
+int fwd = 60;
+int bkwd = 120;
+int stp1 = 90;
+int stp2 = 92;
+int RampSpeed = 10; //ramp steptime in milliseconds
+
+// initialize the speeds for each motor (A,B,C,and D)
+int SpeedA = 90;
+int SpeedB = 90;
+int SpeedC = 92;
+int SpeedD = 92;
+
+void setup() 
+{
+   Serial.begin(9600); //start the serial line at 9600 BAUD
+   Wire.begin(); // begin the i2c line as master
+}
+
+void loop() // input the direction the robot should move and the subroutines take care of the speed for each
+{
+
+  Forward();
+  delay (2000);
+  Left();
+  delay(2000);
+  Backward();
+  delay(2000);
+  Right();
+  delay(2000);
+  Stop();
+  delay(2000);
+
+}
+
+void Forward() //Forward subroutine, all motors rotate towards the front
+{
+  Ramp(fwd, fwd, fwd, fwd);
+}
+
+void Backward() //Backward subroutine, all motors rotate towards the back
+{
+  Ramp(bkwd, bkwd, bkwd, bkwd);
+}
+
+void Right() // Right subroutine, left side motors rotate toward front and right side rotate toward back
+{
+  Ramp(bkwd, fwd, bkwd, fwd);
+}
+
+void Left() //Left subroutine, Right side motors rotate toward front and left side rotate toward back
+{
+  Ramp(fwd, bkwd, fwd, bkwd);
+}
+
+void Stop() //Stop subroutine, All motors stop
+{
+  Ramp(stp1, stp1, stp2, stp2);
+}
+
+//Ramp subroutine, takes desired motor speed and ramps current speed up or down until at desired value
+void Ramp(int DesireA, int DesireB, int DesireC, int DesireD)
+{
+  while ((DesireA != SpeedA) && (DesireB != SpeedB) && (DesireC != SpeedC) && (DesireD != SpeedD )) //while not equal:
+  {
+    if (SpeedA < DesireA) 
+    { 
+      SpeedA = SpeedA + 1;
+    }
+    else if (SpeedA > DesireA)
+    {
+      SpeedA = SpeedA - 1;
+    }
+    else
+    {
+    }
+    if (SpeedB < DesireB)
+    { 
+      SpeedB = SpeedB + 1;
+    }
+    else if (SpeedB > DesireB)
+    {
+      SpeedB = SpeedB - 1;
+    }
+    else
+    {
+    }
+        if (SpeedC < DesireC)
+    { 
+      SpeedC = SpeedC + 1;
+    }
+    else if (SpeedC > DesireC)
+    {
+      SpeedC = SpeedC - 1;
+    }
+    else
+    {
+    }
+    if (SpeedD < DesireD)
+    { 
+      SpeedD = SpeedD + 1;
+    }
+    else if (SpeedD > DesireD)
+    {
+      SpeedD = SpeedD - 1;
+    }
+    else
+    {
+    }
+  byte Speed[] = {SpeedA, SpeedB, SpeedC, SpeedD}; //set all values to array
+  delay(RampSpeed); //time between each ramp step (change to ramp faster or slower)
+  Wire.beginTransmission(1); //Start transmitting to slave on 1
+  Wire.write(Speed,4);      //send speed array as 4 bytes
+  Wire.endTransmission();   // stop transmitting to slave
+  }
+}
